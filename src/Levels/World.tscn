@@ -14,7 +14,7 @@
 [node name="InGameOverlay" parent="UILayer" instance=ExtResource( 5 )]
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 0, -192 )
+position = Vector2( -512, -192 )
 
 [node name="LevelController" type="Node2D" parent="."]
 position = Vector2( 0, 1 )
