@@ -80,6 +80,6 @@ public class InGameOverlay : Control
 
     private void _on_GracePeriodExpired()
     {
-        this.gracePeriodLabel.Text = "";
+        this.gracePeriodLabel.Text = "EXPIRED";
     }
 }

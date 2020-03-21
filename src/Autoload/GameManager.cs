@@ -55,7 +55,6 @@ public class GameManager : Node
             this.everySecond.Stop();
             //EmitSignal(nameof(PlayerDied), "KILLed");
             EmitSignal(nameof(GracePeriodExpired));
-
         }
     }
 }
