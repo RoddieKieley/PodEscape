@@ -25,7 +25,6 @@ public class GameManager : Node
 		EmitSignal(nameof(GameManagerReady)); // just testing the C# signals
 		this.AddChild(everySecond);
 		everySecond.Connect("timeout", this, nameof(_on_Timer_timeout));
-		everySecond.Start(1);
     }
 
 	public void newGame()
@@ -33,12 +32,14 @@ public class GameManager : Node
 		this.Score = 0;
 		GetTree().ChangeScene("res://src/Levels/World.tscn");
 		GetTree().Paused = false;
+        everySecond.Start(1);
 	}
 
 	public void endGame()
 	{
 		GD.Print("player decided to end the current game");
 		// TODO: anything else - do they get a high score if they quit?
+        this.everySecond.Stop();
 		GetTree().ChangeScene("res://src/Scenes/Main.tscn");
 	}
 

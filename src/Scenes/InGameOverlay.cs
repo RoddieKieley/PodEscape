@@ -5,6 +5,7 @@ using Godot.Collections;
 public class InGameOverlay : Control
 {
 	private ColorRect pauseOverlay;
+    private ColorRect highScoresOverlay;
 	private Label scoreLabel;
     private Label gracePeriodLabel;
 	private Label titleLabel;
@@ -22,28 +23,47 @@ public class InGameOverlay : Control
 		}
 	}
 
+    private bool highScores = false;
+    public bool HighScores
+    {
+        get => highScores;
+        set
+        {
+            highScores = value;
+            highScoresOverlay.Visible = value;
+        }
+    }
+
     [Export]
     public int gracePeriodTotal = 0;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		pauseOverlay = GetNode<ColorRect>("PauseOverlay");
-		scoreLabel = GetNode<Label>("Score");
-        gracePeriodLabel = GetNode<Label>("GracePeriod");
-		titleLabel = GetNode<Label>("PauseOverlay/Title");
-		gameManager = GetNode<GameManager>("/root/GameManager");
-
-		gameManager.Connect("UpdatedScore", this, "_on_ScoreUpdated");
-        gameManager.Connect("UpdatedGracePeriod", this, "_on_GracePeriodUpdated");
-		gameManager.Connect("PlayerDied", this, "_on_PlayerDied");
-        this.gameManager.Connect("GracePeriodExpired", this, "_on_GracePeriodExpired");
-
+        this.gameManager = GetNode<GameManager>("/root/GameManager");
         this.gameManager.GracePeriod = this.gracePeriodTotal;
+
+        this.pauseOverlay = GetNode<ColorRect>("PauseOverlay");
+        this.highScoresOverlay = GetNode<ColorRect>("HighScoresOverlay");
+        this.scoreLabel = GetNode<Label>("Score");
+        this.gracePeriodLabel = GetNode<Label>("GracePeriod");
+        this.titleLabel = GetNode<Label>("PauseOverlay/Title");
+
+        this.gameManager.Connect("UpdatedScore", this, "_on_ScoreUpdated");
+        this.gameManager.Connect("UpdatedGracePeriod", this, "_on_GracePeriodUpdated");
+        this.gameManager.Connect("PlayerDied", this, "_on_PlayerDied");
+        this.gameManager.Connect("GracePeriodExpired", this, "_on_GracePeriodExpired");
     }
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
+        if (this.HighScores)
+        {
+            this.gameManager.GracePeriod = this.gracePeriodTotal;
+            this.gameManager.endGame();
+            return;
+        }
+
 		if (Input.IsActionPressed("pause")) // TODO: and player state != dead
 		{
 			this.Paused = !this.Paused;
@@ -81,5 +101,6 @@ public class InGameOverlay : Control
     private void _on_GracePeriodExpired()
     {
         this.gracePeriodLabel.Text = "EXPIRED";
+        this.HighScores = true;
     }
 }
