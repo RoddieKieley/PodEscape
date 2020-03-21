@@ -12,6 +12,9 @@ public class GameManager : Node
     [Signal]
     delegate void UpdatedGracePeriod(int gracePeriod);
 
+    [Signal]
+    delegate void GracePeriodExpired();
+
 	public int Score { get; private set; } = 0;
     public int GracePeriod { get; set; } = 0;
 	private Timer everySecond = new Timer();
@@ -49,7 +52,10 @@ public class GameManager : Node
 
         if (0 == GracePeriod)
         {
-            EmitSignal(nameof(PlayerDied), "KILLed");
+            this.everySecond.Stop();
+            //EmitSignal(nameof(PlayerDied), "KILLed");
+            EmitSignal(nameof(GracePeriodExpired));
+
         }
     }
 }

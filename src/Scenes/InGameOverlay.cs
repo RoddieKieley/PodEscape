@@ -37,6 +37,7 @@ public class InGameOverlay : Control
 		gameManager.Connect("UpdatedScore", this, "_on_ScoreUpdated");
         gameManager.Connect("UpdatedGracePeriod", this, "_on_GracePeriodUpdated");
 		gameManager.Connect("PlayerDied", this, "_on_PlayerDied");
+        this.gameManager.Connect("GracePeriodExpired", this, "_on_GracePeriodExpired");
 
         this.gameManager.GracePeriod = this.gracePeriodTotal;
     }
@@ -74,7 +75,11 @@ public class InGameOverlay : Control
 	private void _on_PlayerDied(string deathString)
 	{
 		// TODO: anything or just let game manager switch to gameover scene
+        // display game over overlay after player has died, i.e. death animation is complete
+    }
+
+    private void _on_GracePeriodExpired()
+    {
         this.gracePeriodLabel.Text = "";
     }
 }
-
